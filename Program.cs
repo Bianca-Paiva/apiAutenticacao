@@ -1,8 +1,10 @@
-
 using apiAutenticacao.Data;
 using apiAutenticacao.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Scalar.AspNetCore;
+using System.Text;
 
 namespace apiAutenticacao
 {
@@ -16,8 +18,26 @@ namespace apiAutenticacao
             builder.Services.AddScoped<AuthService>();
             builder.Services.AddScoped<UsuarioService>();
             builder.Services.AddScoped<EnderecoService>();
+            builder.Services.AddScoped<TokenService>();
 
-           
+            builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
+            {
+                options.TokenValidationParameters = new TokenValidationParameters{
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+
+                    ValidIssuer = builder.Configuration["Jwt:Issuer"],
+                    ValidAudience = builder.Configuration["Jwt:Audience"],
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
+                };
+            });
+
+            // Adiciona serviços de autorização para proteger as rotas da API
+            builder.Services.AddAuthorization();
+
+
             builder.Services.AddControllers();
 
             builder.Services.AddDbContext<AppDbContext>(
@@ -37,6 +57,8 @@ namespace apiAutenticacao
 
             app.UseHttpsRedirection();
 
+            // Habilita o middleare de autenticação para validar os tokens JWT nas requisições
+            app.UseAuthentication();
             app.UseAuthorization();
 
 

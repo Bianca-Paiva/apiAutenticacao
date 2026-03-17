@@ -3,6 +3,7 @@ using apiAutenticacao.Models;
 using apiAutenticacao.Models.DTO;
 using apiAutenticacao.Models.Response;
 using apiAutenticacao.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -10,6 +11,7 @@ using static BCrypt.Net.BCrypt;
 
 namespace apiAutenticacao.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class UsuariosController : ControllerBase
