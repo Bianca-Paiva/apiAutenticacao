@@ -2,13 +2,14 @@
 using apiAutenticacao.Models;
 using apiAutenticacao.Models.DTO;
 using apiAutenticacao.Models.Response;
+using apiAutenticacao.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using static BCrypt.Net.BCrypt;
 
 
 namespace apiAutenticacao.Services
 {
-    public class AuthService
+    public class AuthService : IAuthService
     {
 
         private readonly AppDbContext _context;

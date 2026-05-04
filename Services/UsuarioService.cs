@@ -1,12 +1,18 @@
 ﻿using apiAutenticacao.Data;
 using apiAutenticacao.Models;
+using apiAutenticacao.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace apiAutenticacao.Services
 {
-	public class UsuarioService(AppDbContext context)
+	public class UsuarioService : IUsuarioService
+
 	{
-		private readonly AppDbContext _context = context;
+		private readonly AppDbContext _context;
+
+		public UsuarioService(AppDbContext context) { 
+			_context = context;
+		}
 
 		public async Task<List<Usuario>> GetAllUsers()
 		{
